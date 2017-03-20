@@ -4,13 +4,12 @@ require 'date'
 require 'dotenv'
 require 'json'
 
-DONE_LIST_ID = "57ff9e77264fa210d79a2651"
-
 Dotenv.load
 
 trello_api_key, trello_app_token = ENV.fetch('TRELLO_KEY'), ENV.fetch('TRELLO_TOKEN')
+trello_board_id, done_list_id    = ENV.fetch('CLOUD_BOARD_ID'), ENV.fetch('DONE_LIST_ID')
 
-trello_board_id, date_from, date_to = ARGV
+date_from, date_to = ARGV
 
 date_from = Date.parse(date_from) rescue nil
 date_to = Date.parse(date_to) rescue nil
@@ -24,7 +23,7 @@ if date_from.nil?
 end
 
 unless trello_api_key && trello_app_token && trello_board_id && date_from && date_to
-  puts "Usage: TRELLO_KEY=<trello-key> TRELLO_TOKEN=<trello-token> #{__FILE__} <trello-board-id> <date-from> <date-to>"
+  puts "Usage: #{__FILE__} <date-from> <date-to>"
   exit 1
 end
 
@@ -56,7 +55,7 @@ EOM
   warn message
 end
 
-card_actions = board_actions.reject {|a| a.data['card'].nil? }.select {|a| a.type == 'updateCard' }.reject {|a| a.data['listAfter'].nil?}.select {|a| a.data['listAfter']['id'] == DONE_LIST_ID}
+card_actions = board_actions.reject {|a| a.data['card'].nil? }.select {|a| a.type == 'updateCard' }.reject {|a| a.data['listAfter'].nil?}.select {|a| a.data['listAfter']['id'] == done_list_id}
 
 card_actions.each do |a|
   puts "#{a.date.to_date} #{a.data['card']['name']}"

@@ -4,14 +4,13 @@ require 'date'
 require 'dotenv'
 require 'json'
 
-WIP_LIST_ID = "57ff9e36f4f7ce41e9fe41f4"
-
 Dotenv.load
 
-trello_api_key, trello_app_token, trello_board_id = ENV.fetch('TRELLO_KEY'), ENV.fetch('TRELLO_TOKEN'), ENV.fetch('CLOUD_BOARD_ID')
+trello_api_key, trello_app_token = ENV.fetch('TRELLO_KEY'), ENV.fetch('TRELLO_TOKEN')
+trello_board_id, wip_list_id     = ENV.fetch('CLOUD_BOARD_ID'), ENV.fetch('WIP_LIST_ID')
 
-unless trello_api_key && trello_app_token && trello_board_id 
-  puts "Usage: TRELLO_KEY=<trello-key> TRELLO_TOKEN=<trello-token> #{__FILE__} <trello-board-id>"
+unless trello_api_key && trello_app_token && trello_board_id && wip_list_id
+  puts "Usage: #{__FILE__}"
   exit 1
 end
 
@@ -28,7 +27,7 @@ members = board.members
 
 wip_members = []
 
-wip_cards = board.lists.select {|l| l.id == WIP_LIST_ID}.first.cards
+wip_cards = board.lists.select {|l| l.id == wip_list_id}.first.cards
 
 wip_cards.each do |card|
   wip_members << card.members.flatten if card.members.size > 0
