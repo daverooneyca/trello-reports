@@ -56,7 +56,7 @@ EOM
   warn message
 end
 
-card_actions = board_actions.reject {|a| a.data['card'].nil? }.select {|a| a.type == 'updateCard' }.reject {|a| a.data['listAfter'].nil?}.select {|a| a.data['listAfter']['name'] == 'Done'}
+card_actions = board_actions.reject {|a| a.data['card'].nil? }.select {|a| a.type == 'updateCard' }.reject {|a| a.data['listAfter'].nil?}.select {|a| a.data['listAfter']['id'] == DONE_LIST_ID}
 
 card_actions.each do |a|
   puts "#{a.date.to_date} #{a.data['card']['name']}"
